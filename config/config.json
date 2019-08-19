@@ -1,0 +1,26 @@
+{
+  "development": {
+    "username": "jamescape",
+    "password": null,
+    "database": "caloriecombs_development",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "operatorsAliases": false
+  },
+  "test": {
+    "username": "jamescape",
+    "password": null,
+    "database": "caloriecombs_test",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "operatorsAliases": false
+  },
+  "production": {
+    "username": "jamescape",
+    "password": null,
+    "database": "caloriecombs_production",
+    "host": "127.0.0.1",
+    "dialect": "postgres",
+    "operatorsAliases": false
+  }
+}
