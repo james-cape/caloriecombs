@@ -9,10 +9,16 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
+        allowNull: false,
+        unique: true,
         type: Sequelize.STRING
       },
       calories: {
-        type: Sequelize.INTEGER
+        allowNull: false,
+        type: Sequelize.INTEGER,
+        validate: {
+          min: 0
+        }
       },
       createdAt: {
         allowNull: false,
