@@ -72,4 +72,52 @@ describe('Foods API', () => {
       )
     })
   })
+
+  test('Test GET /api/v1/foods/:id path', async () => {
+    let food_1 = await Food.create(
+      {
+      name: 'banana',
+      calories: 150
+    });
+
+    let food_3 = await Food.create(
+      {
+      name: 'salmon',
+      calories: 175
+    });
+
+    return request(app).get(`/api/v1/foods/${food_3.id}`)
+    .then(response => {
+      expect(response.status).toBe(200),
+      expect(response.body).toStrictEqual(
+        {
+          "calories": food_3.calories,
+          "createdAt": `${food_3.createdAt.toISOString()}`,
+          "id": food_3.id,
+          "name": food_3.name,
+          "updatedAt": `${food_3.updatedAt.toISOString()}`
+        }
+      )
+    })
+  })
+
+  test('Test catch GET /api/v1/foods/:id path', async () => {
+    let food_1 = await Food.create(
+      {
+      name: 'cake',
+      calories: 350
+    });
+
+    let food_3 = await Food.create(
+      {
+      name: 'donut',
+      calories: 185
+    });
+
+    return request(app).get(`/api/v1/foods/a`)
+    .then(response => {
+      expect(response.status).toBe(500),
+      expect(Object.keys(response.body)).toEqual(["error"]);
+    })
+  })
 })
