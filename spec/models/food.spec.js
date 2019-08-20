@@ -37,7 +37,6 @@ describe('model test', () => {
       calories: -100
     })
     .catch(food => {
-      console.log(food);
       expect(food.name).toBe("SequelizeUniqueConstraintError");
     });
   });
@@ -48,7 +47,6 @@ describe('model test', () => {
       calories: 0
     })
     .then(food => {
-      console.log(food);
       expect(food.calories).toBe(0);
     })
   });
