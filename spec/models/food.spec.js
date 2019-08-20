@@ -1,32 +1,13 @@
 var shell = require('shelljs');
 var request = require("supertest");
 var Food = require('../../models').Food;
+var cleanup = require('../helper/testCleanup');
 
 describe('model test', () => {
-  // beforeAll(() => {
-  //   shell.exec('npx sequelize db:drop')
-  //   shell.exec('npx sequelize db:create')
-  // });
-  // beforeEach(() => {
-  //   shell.exec('npx sequelize db:migrate')
-  // });
-  // afterAll(() => {
-  //   shell.exec('npx sequelize db:drop')
-  // })
-
-  beforeAll(() => {
-    shell.exec('npx sequelize db:create')
-  });
   beforeEach(() => {
-      shell.exec('npx sequelize db:migrate')
-      shell.exec('npx sequelize db:seed:all')
-    });
-  afterEach(() => {
-    shell.exec('npx sequelize db:migrate:undo:all')
+    cleanup()
   });
-  afterAll(() => {
-    shell.exec('npx sequelize db:drop')
-  });
+
 
   test('it has attributes', async () => {
     await Food.create({
