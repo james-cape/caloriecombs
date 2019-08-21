@@ -261,4 +261,19 @@ describe('Foods API', () => {
       expect(Object.keys(response.body)).toEqual(["error"]);
     })
   })
+
+  test('Test DELETE /api/v1/foods/:id path', async () => {
+    let food_1 = await Food.create(
+      {
+      name: 'key lime pie',
+      calories: 4500
+    });
+    const foodId = await food_1.id
+
+    return request(app).delete(`/api/v1/foods/${foodId}`)
+    .then(response => {
+      expect(response.status).toBe(204)
+      expect(response.body).toEqual({})
+    })
+  })
 })
