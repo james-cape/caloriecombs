@@ -52,4 +52,38 @@ router.post("/", (req, res) => {
     res.status(400).send(JSON.stringify({error: "Please provide a food with a name and calories."}));
   }
 })
+
+/* PATCH to update a food */
+router.patch("/:id", (req, res) => {
+  if (req.body.food) {
+    Food.findOne({
+      where: {
+        id: req.params.id
+      }
+    })
+    .then(food => {
+      if (food) {
+        food.update({
+          name: req.body.food.name,
+          calories: req.body.food.calories
+        })
+        .then(updatedFood => {
+          res.setHeader("Content-Type", "application/json");
+          res.status(200).send(JSON.stringify(updatedFood));
+        })
+        .catch(error => {
+          res.setHeader("Content-Type", "application/json");
+          res.status(500).send({error})
+        })
+      }
+    })
+    .catch(error => {
+      res.setHeader("Content-Type", "application/json");
+      res.status(500).send({error})
+    });
+  } else {
+    res.setHeader("Content-Type", "application/json");
+    res.status(400).send(JSON.stringify({error: "Please provide a food with a name or calories to update."}));
+  }
+})
 module.exports = router;
