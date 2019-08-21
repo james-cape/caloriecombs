@@ -187,4 +187,78 @@ describe('Foods API', () => {
       expect(Object.keys(response.body)).toEqual(["error"]);
     })
   })
+
+  test("Test PATCH /api/v1/foods/:id path updates food", async () => {
+    let food = await Food.create({
+      name: "Green Bean",
+      calories: 10
+    })
+    let updatedFood = {
+      food: {
+        name: "Green Spinach",
+        calories: 20
+      }
+    }
+    return request(app).patch(`/api/v1/foods/${food.id}`)
+    .send(updatedFood)
+    .then(response => {
+      expect(response.status).toBe(200),
+      expect.objectContaining({ food: expect.objectContaining({
+        name: expect.any(String),
+        calories: expect.any(Number)
+      })})
+    })
+  })
+
+  test("Test PATCH /api/v1/foods/:id path doesn't update food if no body in request", async () => {
+    let food = await Food.create({
+      name: "Black Beans",
+      calories: 10
+    })
+    let updatedFood = {}
+    return request(app).patch(`/api/v1/foods/${food.id}`)
+    .send(updatedFood)
+    .then(response => {
+      expect(response.status).toBe(400),
+      expect(response.body).toEqual({"error": "Please provide a food with a name or calories to update."})
+    })
+  })
+
+  test("Test PATCH /api/v1/foods/:id path return if food doesn't exist in DB", async () => {
+
+    let updatedFood = {
+      food: {
+        name: "Green Spinach",
+        calories: 20
+      }
+    }
+
+    return request(app).patch(`/api/v1/foods/${null}`)
+    .send(updatedFood)
+    .then(response => {
+      expect(response.status).toBe(500),
+      expect(Object.keys(response.body)).toEqual(["error"]);
+    })
+  })
+
+  test("Test PATCH /api/v1/foods/:id path return if wrong cal type", async () => {
+    let food = await Food.create({
+      name: "Pinto Beans",
+      calories: 10
+    })
+
+    let updatedFood = {
+      food: {
+        name: "Blue Spinach",
+        calories: "twenty"
+      }
+    }
+
+    return request(app).patch(`/api/v1/foods/${food.id}`)
+    .send(updatedFood)
+    .then(response => {
+      expect(response.status).toBe(500),
+      expect(Object.keys(response.body)).toEqual(["error"]);
+    })
+  })
 })
