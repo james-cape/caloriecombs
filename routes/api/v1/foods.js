@@ -86,4 +86,15 @@ router.patch("/:id", (req, res) => {
     res.status(400).send(JSON.stringify({error: "Please provide a food with a name or calories to update."}));
   }
 })
+
+/* DELETE to destroy a food */
+router.delete('/:id', (req, res) => {
+  Food.destroy({
+    where: { id: req.params.id }
+  })
+  .then(deletedFood => {
+    res.sendStatus(204);
+  });
+});
+
 module.exports = router;
