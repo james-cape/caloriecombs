@@ -120,4 +120,71 @@ describe('Foods API', () => {
       expect(Object.keys(response.body)).toEqual(["error"]);
     })
   })
+
+  test('Test POST /api/v1/foods/ path to create food', () => {
+    let food_new = {
+      food: {
+        name: "carrot",
+        calories: 20
+      }
+    }
+    return request(app).post(`/api/v1/foods`)
+    .send(food_new)
+    .then(response => {
+      expect(response.status).toBe(201),
+      expect.objectContaining({ food: expect.objectContaining({
+        name: expect.any(String),
+        calories: expect.any(Number)
+      })})
+    })
+  })
+
+  test("Test POST /api/v1/foods/ path doesn't create food if name missing", () => {
+    let food_new = {
+      food: {
+        name: null,
+        calories: 20
+      }
+    }
+    return request(app).post(`/api/v1/foods`)
+    .send(food_new)
+    .then(response => {
+      expect(response.status).toBe(400),
+      expect(Object.keys(response.body)).toEqual(["error"]);
+    })
+  })
+
+  test("Test POST /api/v1/foods/ path doesn't create food if calories missing", () => {
+    let food_new = {
+      food: {
+        name: "Spinach",
+        calories: null
+      }
+    }
+    return request(app).post(`/api/v1/foods`)
+    .send(food_new)
+    .then(response => {
+      expect(response.status).toBe(400),
+      expect(Object.keys(response.body)).toEqual(["error"]);
+    })
+  })
+
+  test("Test it doesn't create food if it already exists", async () => {
+    await Food.create({
+      name: "Spinach",
+      calories: 10
+    })
+    let food_new = {
+      food: {
+        name: "Spinach",
+        calories: 10
+      }
+    }
+    return request(app).post(`/api/v1/foods`)
+    .send(food_new)
+    .then(response => {
+      expect(response.status).toBe(500),
+      expect(Object.keys(response.body)).toEqual(["error"]);
+    })
+  })
 })
