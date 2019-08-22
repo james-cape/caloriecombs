@@ -4,6 +4,7 @@ var express = require("express");
 
 var Food = require('../../models').Food;
 var Meal = require('../../models').Meal;
+var MealFood = require('../../models').MealFood;
 var cleanup = require('../helper/testCleanup');
 
 describe('model test', () => {
@@ -25,14 +26,39 @@ describe('model test', () => {
       });
 
 
-    await Meal.create({
-      name: "dinner",
-      foods: [food_1, food_2]
+    return Meal.create({
+      name: "dinner"
     })
     .then(meal => {
-      console.log(meal)
-      expect(meal.name).toBe("dinner");
-      expect(meal.foods[0]).toStrictEqual(food_1);
+      return meal.hasFood(food_1)
+      .then(result => {
+        expect(result).toBe(false)
+        // console.log(result)
+
+        return meal.addFood(food_1).then(() => {
+          return meal.hasFood(food_1).then(result => {
+            return meal.getFood().then((result) => {
+              console.log('hello XXXXXXXXXXXXXX');
+              console.log(result[0].dataValues.name)
+              expect(result[0].dataValues.name)toBe('peanut butter')
+            })
+            // console.log(meal.getFood())
+          })
+        })
+      })
+      // .create({
+      //   mealId: meal.id,
+      //   foodId: food_1.id
+      // })
+      .then(mealfood => {
+        expect(meal.name).toBe("dinner");
+      })
+      // .catch(error => {
+      //   console.log(error)
+      // })
+      // meal.addFoods([food_1, food_2])
+      // console.log(meal)
+      // expect(meal.foods).toStrictEqual([food_1, food_2]);
     });
   //
   // test('it has other attributes', async () => {
