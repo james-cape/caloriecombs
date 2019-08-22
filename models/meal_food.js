@@ -6,8 +6,6 @@ module.exports = (sequelize, DataTypes) => {
     foodId: DataTypes.INTEGER
   }, {});
   MealFood.associate = function(models) {
-    // this.belongsTo(models.Meal)
-    // this.belongsTo(models.Food)
   };
   return MealFood;
 };

@@ -38,17 +38,13 @@ describe('Meals API', () => {
 
     let meal_1 = await Meal.create(
       {
-      name: 'sandwich_1',
-      foods: [food_1, food_2, food_3]
+      name: 'sandwich_1'
     });
 
     let meal_2 = await Meal.create(
       {
-      name: 'sandwich_2',
-      foods: [food_2, food_3, food_4]
+      name: 'sandwich_2'
     });
-
-
 
     return request(app).get('/api/v1/meals')
     .then(response => {
@@ -57,13 +53,11 @@ describe('Meals API', () => {
       expect(response.body).toStrictEqual(
         [{
           "id": 1,
-          "name": "sandwich_1",
-          "foods": meal_1.foods
+          "name": "sandwich_1"
         },
         {
           "id": 2,
-          "name": "sandwich_2",
-          "foods": meal_2.foods
+          "name": "sandwich_2"
         }
         ]
       )

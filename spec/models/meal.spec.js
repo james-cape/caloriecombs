@@ -74,5 +74,21 @@ describe('model test', () => {
     });
   });
 
-  // Test unique foods. Test unique meal names. Test meal name must exist.
+  test('meal name is unique', async () => {
+    await Meal.create({
+      name: "dinner"
+    })
+    .catch(food => {
+      expect(food.name).toBe("SequelizeUniqueConstraintError");
+    })
+  });
+
+  test('meal name must be present', async () => {
+    await Meal.create({
+      name: null
+    })
+    .catch(food => {
+      expect(food.name).toBe("SequelizeDatabaseError");
+    })
+  });
 });
