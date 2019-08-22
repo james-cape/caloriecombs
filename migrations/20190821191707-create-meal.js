@@ -9,10 +9,9 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       name: {
-        type: Sequelize.STRING
-      },
-      foods: {
-        type: Sequelize.ARRAY(Sequelize.TEXT)
+        allowNull: false,
+        type: Sequelize.STRING,
+        unique: true
       },
       createdAt: {
         allowNull: false,
