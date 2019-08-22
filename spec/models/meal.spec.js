@@ -53,5 +53,26 @@ describe('model test', () => {
     });
   });
 
+  test('it has no food duplicates', async () => {
+    let food_1 = await Food.create(
+      {
+        name: 'peanut butter',
+        calories: 195
+      });
+
+    return Meal.create({
+      name: "dinner"
+    })
+    .then(meal => {
+      return meal.addFood(food_1).then(() => {
+        return meal.addFood(food_1).then(() => {
+          return meal.getFood().then((result) => {
+            expect(result.length).toBe(1);
+          })
+        })
+      })
+    });
+  });
+
   // Test unique foods. Test unique meal names. Test meal name must exist.
 });
