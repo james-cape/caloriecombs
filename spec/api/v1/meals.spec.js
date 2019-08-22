@@ -75,104 +75,104 @@ describe('Meals API', () => {
     let mealfood_11 = await MealFood.create({foodId: 2,  mealId: 4})
     let mealfood_12 = await MealFood.create({foodId: 3,  mealId: 4})
 
-    await meal_1.getFood().then((result) => {
-      console.log(result)
-      expect(result.length).toBe(3);
-      // expect(result[0].dataValues.name).toBe('peanut butter');
-      // expect(result[1].dataValues.name).toBe('turkey');
-    })
-
-    // return request(app).get('/api/v1/meals')
-    // .then(response => {
-    //   expect(response.status).toBe(200),
-    //   expect(response.body).toStrictEqual(
-    //     [
-    //       {
-    //         "id": 1,
-    //         "name": "Breakfast",
-    //         "foods": [
-    //           {
-    //             "id": 1,
-    //             "name": "Banana",
-    //             "calories": 150
-    //           },
-    //           {
-    //             "id": 6,
-    //             "name": "Yogurt",
-    //             "calories": 550
-    //           },
-    //           {
-    //             "id": 12,
-    //             "name": "Apple",
-    //             "calories": 220
-    //           }
-    //         ]
-    //       },
-    //       {
-    //         "id": 2,
-    //         "name": "Snack",
-    //         "foods": [
-    //           {
-    //             "id": 1,
-    //             "name": "Banana",
-    //             "calories": 150
-    //           },
-    //           {
-    //             "id": 9,
-    //             "name": "Gum",
-    //             "calories": 50
-    //           },
-    //           {
-    //             "id": 10,
-    //             "name": "Cheese",
-    //             "calories": 400
-    //           }
-    //         ]
-    //       },
-    //       {
-    //         "id": 3,
-    //         "name": "Lunch",
-    //         "foods": [
-    //           {
-    //             "id": 2,
-    //             "name": "Bagel Bites - Four Cheese",
-    //             "calories": 650
-    //           },
-    //           {
-    //             "id": 3,
-    //             "name": "Chicken Burrito",
-    //             "calories": 800
-    //           },
-    //           {
-    //             "id": 12,
-    //             "name": "Apple",
-    //             "calories": 220
-    //           }
-    //         ]
-    //       },
-    //       {
-    //         "id": 4,
-    //         "name": "Dinner",
-    //         "foods": [
-    //           {
-    //             "id": 1,
-    //             "name": "Banana",
-    //             "calories": 150
-    //           },
-    //           {
-    //             "id": 2,
-    //             "name": "Bagel Bites - Four Cheese",
-    //             "calories": 650
-    //           },
-    //           {
-    //             "id": 3,
-    //             "name": "Chicken Burrito",
-    //             "calories": 800
-    //           }
-    //         ]
-    //       }
-    //     ]
-    //   )
+    // await meal_1.getFood()
+    // .then((result) => {
+    //   expect(result.length).toBe(3);
+    //   // expect(result[0].dataValues.name).toBe('peanut butter');
+    //   // expect(result[1].dataValues.name).toBe('turkey');
     // })
-  })
-})
+
+    return request(app).get('/api/v1/meals')
+    .then(response => {
+      expect(response.status).toBe(200),
+      expect(response.body).toEqual( "hello"
+        // [
+        //   {
+        //     "id": 1,
+        //     "name": "Breakfast",
+        //     "foods": [
+        //       {
+        //         "id": 1,
+        //         "name": "Banana",
+        //         "calories": 150
+        //       },
+        //       {
+        //         "id": 6,
+        //         "name": "Yogurt",
+        //         "calories": 550
+        //       },
+        //       {
+        //         "id": 12,
+        //         "name": "Apple",
+        //         "calories": 220
+        //       }
+        //     ]
+        //   },
+        //   {
+        //     "id": 2,
+        //     "name": "Snack",
+        //     "foods": [
+        //       {
+        //         "id": 1,
+        //         "name": "Banana",
+        //         "calories": 150
+        //       },
+        //       {
+        //         "id": 9,
+        //         "name": "Gum",
+        //         "calories": 50
+        //       },
+        //       {
+        //         "id": 10,
+        //         "name": "Cheese",
+        //         "calories": 400
+        //       }
+        //     ]
+        //   },
+        //   {
+        //     "id": 3,
+        //     "name": "Lunch",
+        //     "foods": [
+        //       {
+        //         "id": 2,
+        //         "name": "Bagel Bites - Four Cheese",
+        //         "calories": 650
+        //       },
+        //       {
+        //         "id": 3,
+        //         "name": "Chicken Burrito",
+        //         "calories": 800
+        //       },
+        //       {
+        //         "id": 12,
+        //         "name": "Apple",
+        //         "calories": 220
+        //       }
+        //     ]
+        //   },
+        //   {
+        //     "id": 4,
+        //     "name": "Dinner",
+        //     "foods": [
+        //       {
+        //         "id": 1,
+        //         "name": "Banana",
+        //         "calories": 150
+        //       },
+        //       {
+        //         "id": 2,
+        //         "name": "Bagel Bites - Four Cheese",
+        //         "calories": 650
+        //       },
+        //       {
+        //         "id": 3,
+        //         "name": "Chicken Burrito",
+        //         "calories": 800
+        //       }
+        //     ]
+        //   }
+        // ]
+      )
+    });
+  });
+});

@@ -4,12 +4,40 @@ var Food = require('../../../models').Food;
 var Meal = require('../../../models').Meal;
 
 /* GET all meals */
-router.get("/", function(req, res, next) {
-  Meal.findAll()
+router.get("/", async (req, res, next) => {
+  await Meal.findAll()
     .then(meals => {
-      res.setHeader("Content-Type", "application/json");
-      res.status(200).send(JSON.stringify(meals, ['id', 'name', 'foods']));
+      var i;
+      var accumulator = [];
+
+      for (i = 0; i < meals.length; i++) {
+        var accumulator_object = {
+          "id": meals[i].id,
+          "name": meals[i].name,
+          "foods": meals[i].getFood()
+          .then(foods => {
+            // Look into wrapping it in promise.all which will return all promises.
+            return foods
+          })
+
+        }
+        accumulator.push(accumulator_object)
+      };
+      return accumulator
+
+
+      // for(meal; meal < meals.length; i++)
+      // .then(foods => {
+      //   console.log(foods)
+      // });
+      // res.setHeader("Content-Type", "application/json");
+      // res.status(200).send(JSON.stringify(
+      //   meals, ['id', 'name', 'foods']
+      // ));
       // res.status(200).send(JSON.stringify(meals, ['id', 'name', 'foods'['id', 'name', 'calories']]));
+    })
+    .then(result => {
+      console.log(result)
     })
     .catch(error => {
       res.setHeader("Content-Type", "application/json");
