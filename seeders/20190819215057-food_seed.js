@@ -1,4 +1,6 @@
 'use strict';
+var Food = require('../models').Food;
+
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
