@@ -81,4 +81,121 @@ describe('Meals API', () => {
       expect(response.body).toEqual( [{"Food": [{"calories": 150, "id": 1, "name": "Banana"}, {"calories": 550, "id": 6, "name": "Yogurt"}, {"calories": 220, "id": 12, "name": "Apple"}], "id": 1, "name": "Breakfast"}, {"Food": [{"calories": 150, "id": 1, "name": "Banana"}, {"calories": 50, "id": 9, "name": "Gum"}, {"calories": 400, "id": 10, "name": "Cheese"}], "id": 2, "name": "Snack"}, {"Food": [{"calories": 650, "id": 2, "name": "Bagel Bites - Four Cheese"}, {"calories": 800, "id": 3, "name": "Chicken Burrito"}, {"calories": 220, "id": 12, "name": "Apple"}], "id": 3, "name": "Lunch"}, {"Food": [{"calories": 150, "id": 1, "name": "Banana"}, {"calories": 650, "id": 2, "name": "Bagel Bites - Four Cheese"}, {"calories": 800, "id": 3, "name": "Chicken Burrito"}], "id": 4, "name": "Dinner"}])
     });
   });
+
+  describe('Test POST /api/v1/meals/:meal_id/foods/:id path', async () => {
+    beforeEach(() => {
+      cleanup()
+    });
+
+    test('it adds food to meal and returns a message', async () => {
+      let food_1 = await Food.create({
+          "id": 1,
+          "name": "Banana",
+          "calories": 150
+        });
+
+      let food_2 = await Food.create({
+          "id": 2,
+          "name": "Bagel Bites - Four Cheese",
+          "calories": 650
+        });
+
+      let meal_1 = await Meal.create({ id: 1, name: 'Breakfast' });
+      let meal_2 = await Meal.create({ id: 2, name: 'Snack' });
+
+      let mealfood_1 =  await MealFood.create({foodId: 1,  mealId: 1})
+      let mealfood_2 =  await MealFood.create({foodId: 1,  mealId: 2})
+      return meal_1.hasFood(food_2).then(result => {
+        expect(result).toBe(false)
+      })
+      return meal_2.hasFood(food_2).then(result => {
+        expect(result).toBe(false)
+      })
+
+      return request(app).post('/api/v1/meals/1/foods/2')
+      .then(response => {
+        expect(response.status).toBe(200),
+        expect(response.body).toEqual(
+          {
+            "message": "Successfully added Bagel Bites - Four Cheese to Breakfast"
+          }
+        )
+        return meal_1.hasFood(food_2).then(result => {
+          expect(result).toBe(true)
+        })
+        return meal_2.hasFood(food_2).then(result => {
+          expect(result).toBe(false)
+        })
+      });
+    });
+
+    test('errors when food not found', async () => {
+      let food_1 = await Food.create({
+          "id": 1,
+          "name": "Banana",
+          "calories": 150
+        });
+
+      let food_2 = await Food.create({
+          "id": 2,
+          "name": "Bagel Bites - Four Cheese",
+          "calories": 650
+        });
+
+      let meal_1 = await Meal.create({ id: 1, name: 'Breakfast' });
+      let mealfood_1 =  await MealFood.create({foodId: 1,  mealId: 1})
+
+      return request(app).post('/api/v1/meals/1/foods/3')
+      .then(response => {
+        expect(response.status).toBe(500),
+        expect(response.body).toEqual({"error": "Food not found"})
+      });
+    });
+
+    test('errors when meal not found', async () => {
+      let food_1 = await Food.create({
+          "id": 1,
+          "name": "Banana",
+          "calories": 150
+        });
+
+      let food_2 = await Food.create({
+          "id": 2,
+          "name": "Bagel Bites - Four Cheese",
+          "calories": 650
+        });
+
+      let meal_1 = await Meal.create({ id: 1, name: 'Breakfast' });
+      let mealfood_1 =  await MealFood.create({foodId: 1,  mealId: 1})
+
+      return request(app).post('/api/v1/meals/4/foods/2')
+      .then(response => {
+        expect(response.status).toBe(500),
+        expect(response.body).toEqual({"error": "Meal not found"})
+      });
+    });
+
+    test('errors when meal already has that food', async () => {
+      let food_1 = await Food.create({
+          "id": 1,
+          "name": "Banana",
+          "calories": 150
+        });
+
+      let food_2 = await Food.create({
+          "id": 2,
+          "name": "Bagel Bites - Four Cheese",
+          "calories": 650
+        });
+
+      let meal_1 = await Meal.create({ id: 1, name: 'Breakfast' });
+      let mealfood_1 =  await MealFood.create({foodId: 1,  mealId: 1})
+
+      return request(app).post('/api/v1/meals/1/foods/1')
+      .then(response => {
+        expect(response.status).toBe(500),
+        expect(response.body).toEqual({"error": "Meal already has that food"})
+      });
+    });
+  });
 });
