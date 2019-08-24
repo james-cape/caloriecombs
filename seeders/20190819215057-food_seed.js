@@ -1,5 +1,7 @@
 'use strict';
 var Food = require('../models').Food;
+var Meal = require('../models').Meal;
+var MealFood = require('../models').MealFood;
 
 
 module.exports = {
