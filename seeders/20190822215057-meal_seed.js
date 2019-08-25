@@ -5,7 +5,7 @@ var MealFood = require('../models').MealFood;
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert('Meal', [
+    return queryInterface.bulkInsert('Meals', [
       {
         id: 1,
         name: "Breakfast",
@@ -30,6 +30,6 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('Meal', null, {})
+    return queryInterface.bulkDelete('Meals', null, {})
   }
 };
