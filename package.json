@@ -8,7 +8,7 @@
   },
   "jest": {
     "maxConcurrency": 1,
-    "verbose": true,
+    "verbose": false,
     "collectCoverage": true,
     "globalSetup": "./spec/helper/testGlobalSetup.js",
     "globalTeardown": "./spec/helper/testGlobalTeardown.js"

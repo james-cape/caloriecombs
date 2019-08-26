@@ -1,6 +1,6 @@
 {
   "development": {
-    "username": "jamescape",
+    "username": "bp",
     "password": null,
     "database": "caloriecombs_development",
     "host": "127.0.0.1",
@@ -8,7 +8,7 @@
     "operatorsAliases": false
   },
   "test": {
-    "username": "jamescape",
+    "username": "bp",
     "password": null,
     "database": "caloriecombs_test",
     "host": "127.0.0.1",
@@ -16,7 +16,7 @@
     "operatorsAliases": false
   },
   "production": {
-    "username": "jamescape",
+    "username": "bp",
     "password": null,
     "database": "caloriecombs_production",
     "host": "127.0.0.1",
