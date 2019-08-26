@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 var Food = require('../../../models').Food;
 var Meal = require('../../../models').Meal;
+var MealFood = require('../../../models').MealFood;
 
 /* GET all meals */
 router.get('/', (request, response) => {
@@ -54,6 +55,37 @@ router.post('/:meal_id/foods/:id', (request, response) => {
       }
     })
   })
+})
+
+/* DELETE removes a food from a meal */
+router.delete('/:mealId/foods/:foodId', (request, response) => {
+  if (request.params.mealId && request.params.foodId) {
+    MealFood.findOne({
+      where: {
+        mealId: 100,
+        foodId: 101
+    }
+    })
+    .then(mealfood => {
+      if (mealfood) {
+        return mealfood.destroy()
+        .then(deletedMealFood => {
+          response.setHeader('Content-Type', 'application/json');
+          response.status(204).send(JSON.stringify(deletedMealFood));
+        })
+        .catch(error => {
+          response.setHeader('Content-Type', 'application/json');
+          response.status(500).send({ error });
+        })
+      } else {
+        response.setHeader('Content-Type', 'application/json');
+        response.status(404).send({ error: "Unknown meal and/or food. Please try again"});
+      }
+    })
+  } else {
+    response.setHeader('Content-Type', 'application/json');
+    response.status(400).send({ error: 'Please provide a meal ID and food ID in the request parameters.' });
+  }
 })
 
 module.exports = router;
