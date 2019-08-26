@@ -3,42 +3,33 @@ var Food = require('../models').Food;
 var Meal = require('../models').Meal;
 var MealFood = require('../models').MealFood;
 
-
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.bulkInsert('Food', [
+    return queryInterface.bulkInsert('Meals', [
       {
         id: 1,
-        name: 'banana',
-        calories: 150,
+        name: "Breakfast",
         createdAt: new Date(),
-        updatedAt: new Date()
-      },
+        updatedAt: new Date()},
       {
         id: 2,
-        name: 'mushroom',
-        calories: 105,
+        name: "Snack",
         createdAt: new Date(),
-        updatedAt: new Date()
-      },
+        updatedAt: new Date()},
       {
         id: 3,
-        name: 'salmon',
-        calories: 175,
+        name: "Lunch",
         createdAt: new Date(),
-        updatedAt: new Date()
-      },
+        updatedAt: new Date()},
       {
         id: 4,
-        name: 'peanut butter',
-        calories: 195,
+        name: "Dinner",
         createdAt: new Date(),
-        updatedAt: new Date()
-      }
+        updatedAt: new Date()},
     ], {})
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.bulkDelete('Food', null, {});
+    return queryInterface.bulkDelete('Meals', null, {})
   }
 };
