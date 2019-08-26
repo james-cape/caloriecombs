@@ -62,8 +62,8 @@ router.delete('/:mealId/foods/:foodId', (request, response) => {
   if (request.params.mealId && request.params.foodId) {
     MealFood.findOne({
       where: {
-        mealId: 100,
-        foodId: 101
+        mealId: request.params.mealId,
+        foodId: request.params.foodId
     }
     })
     .then(mealfood => {
@@ -79,12 +79,13 @@ router.delete('/:mealId/foods/:foodId', (request, response) => {
         })
       } else {
         response.setHeader('Content-Type', 'application/json');
-        response.status(404).send({ error: "Unknown meal and/or food. Please try again"});
+        response.status(404).send({error: "Unknown meal and/or food. Please try again"});
       }
     })
-  } else {
-    response.setHeader('Content-Type', 'application/json');
-    response.status(400).send({ error: 'Please provide a meal ID and food ID in the request parameters.' });
+    .catch(error => {
+      response.setHeader('Content-Type', 'application/json');
+      response.status(500).send({ error });
+    })
   }
 })
 
