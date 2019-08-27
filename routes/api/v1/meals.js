@@ -19,6 +19,29 @@ router.get('/', (request, response) => {
   })
 })
 
+/* GET one meal by id */
+router.get("/:id/foods", function(req, res) {
+  Meal.findOne({
+    include: Food,
+    where: {
+      id: req.params.id
+    }
+  })
+  .then(meal => {
+    if (meal) {
+      res.setHeader("Content-Type", "application/json");
+      res.status(200).send(JSON.stringify(meal, ['id', 'name', 'Food', 'id', 'name', 'calories']));
+    } else {
+      res.setHeader("Content-Type", "application/json");
+      res.status(404).send({error: `We can't find a meal with id ${req.params.id}`})
+    }
+  })
+  .catch(error => {
+    res.setHeader("Content-Type", "application/json");
+    res.status(500).send({error})
+  });
+});
+
 /* POST adds a food to a meal */
 router.post('/:meal_id/foods/:id', (request, response) => {
   return Meal.findOne({

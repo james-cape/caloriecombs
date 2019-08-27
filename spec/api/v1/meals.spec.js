@@ -5,7 +5,6 @@ var Food = require('../../../models').Food;
 var Meal = require('../../../models').Meal;
 var MealFood = require('../../../models').MealFood;
 
-
 var cleanup = require('../../helper/testCleanup');
 
 describe('Meals API', () => {
@@ -200,6 +199,7 @@ describe('Meals API', () => {
   });
 
   describe('Test DELETE /api/v1/meals/:meal_id/foods/:food_id path', () => {
+
     beforeEach(() => {
       cleanup()
     });
@@ -311,5 +311,59 @@ describe('Meals API', () => {
       });
     });
 
+    describe('Test GET /api/v1/meals/:id/foods/ path', () => {
+
+      beforeEach(() => {
+        cleanup()
+      });
+      test('it returns a meals associated foods', async () => {
+        let food_1 = await Food.create({
+            "id": 111,
+            "name": "Food 1",
+            "calories": 100
+          });
+
+        let food_2 = await Food.create({
+            "id": 222,
+            "name": "Food 2",
+            "calories": 200
+          });
+
+        let food_3 = await Food.create({
+            "id": 333,
+            "name": "Food 3",
+            "calories": 300
+          });
+
+        let meal_1 = await Meal.create({ id: 111, name: 'Meal 1' });
+        let meal_2 = await Meal.create({ id: 222, name: 'Meal 2' });
+
+        let mealfood_1 =  await MealFood.create({foodId: 111,  mealId: 111})
+        let mealfood_2 =  await MealFood.create({foodId: 222,  mealId: 111})
+        let mealfood_3 =  await MealFood.create({foodId: 222,  mealId: 222})
+        let mealfood_4 =  await MealFood.create({foodId: 333, mealId: 222})
+
+        return request(app).get(`/api/v1/meals/${meal_1.id}/foods`)
+        .then(response => {
+          expect(response.status).toBe(200),
+          expect(response.body).toEqual({"Food": [{"calories": 100, "id": 111, "name": "Food 1"}, {"calories": 200, "id": 222, "name": "Food 2"}], "id": 111, "name": "Meal 1"})
+        });
+      });
+
+      test('it returns 404 error if meal id invalid', async () => {
+        return request(app).get(`/api/v1/meals/12345/foods`)
+        .then(response => {
+          expect(response.status).toBe(404),
+          expect(response.body).toEqual({error: `We can't find a meal with id 12345`})
+        });
+      });
+
+      test('it returns 500 error if meal id missing', async () => {
+        return request(app).get(`/api/v1/meals/:id/foods`)
+        .then(response => {
+          expect(response.status).toBe(500)
+        });
+      });
+    });
   });
 });
