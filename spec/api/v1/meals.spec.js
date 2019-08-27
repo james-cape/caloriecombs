@@ -198,57 +198,171 @@ describe('Meals API', () => {
     });
   });
 
-  describe('Test GET /api/v1/meals/:id/foods/ path', () => {
+  describe('Test DELETE /api/v1/meals/:meal_id/foods/:food_id path', () => {
+
     beforeEach(() => {
       cleanup()
     });
 
-    test('it returns a meals associated foods', async () => {
-      let food_1 = await Food.create({
-          "id": 111,
-          "name": "Food 1",
-          "calories": 100
+    test('it deletes a food from a meal', async () => {
+      let food_01 = await Food.create({
+          "id": 101,
+          "name": "Food 101",
+          "calories": 101
         });
 
-      let food_2 = await Food.create({
-          "id": 222,
-          "name": "Food 2",
-          "calories": 200
+      let food_02 = await Food.create({
+          "id": 102,
+          "name": "Food 102",
+          "calories": 102
         });
 
-      let food_3 = await Food.create({
-          "id": 333,
-          "name": "Food 3",
-          "calories": 300
+      let food_03 = await Food.create({
+          "id": 103,
+          "name": "Food 103",
+          "calories": 103
         });
 
-      let meal_1 = await Meal.create({ id: 111, name: 'Meal 1' });
-      let meal_2 = await Meal.create({ id: 222, name: 'Meal 2' });
+      let meal_100 = await Meal.create({ id: 100, name: 'One Hundred' });
 
-      let mealfood_1 =  await MealFood.create({foodId: 111,  mealId: 111})
-      let mealfood_2 =  await MealFood.create({foodId: 222,  mealId: 111})
-      let mealfood_3 =  await MealFood.create({foodId: 222,  mealId: 222})
-      let mealfood_4 =  await MealFood.create({foodId: 333, mealId: 222})
+      let mealfood_101 = await MealFood.create({foodId: 101,  mealId: 100})
+      let mealfood_102 = await MealFood.create({foodId: 102,  mealId: 100})
+      let mealfood_103 = await MealFood.create({foodId: 103,  mealId: 100})
 
-      return request(app).get(`/api/v1/meals/${meal_1.id}/foods`)
+      meal_100.hasFood(food_01).then(result => {
+        expect(result).toBe(true)
+      })
+
+      meal_100.hasFood(food_02).then(result => {
+        expect(result).toBe(true)
+      })
+
+      meal_100.hasFood(food_03).then(result => {
+        expect(result).toBe(true)
+      })
+
+      return request(app).delete(`/api/v1/meals/${meal_100.id}/foods/${food_01.id}`)
       .then(response => {
-        expect(response.status).toBe(200),
-        expect(response.body).toEqual({"Food": [{"calories": 100, "id": 111, "name": "Food 1"}, {"calories": 200, "id": 222, "name": "Food 2"}], "id": 111, "name": "Meal 1"})
+        expect(response.status).toBe(204),
+        expect(response.body).toEqual({})
+
+        meal_100.hasFood(food_01).then(result => {
+          expect(result).toBe(false)
+        })
       });
     });
 
-    test('it returns 404 error if meal id invalid', async () => {
-      return request(app).get(`/api/v1/meals/12345/foods`)
+    test("it doesn't delete a food from a meal if mealId invalid", async () => {
+      let food_01 = await Food.create({"id": 101, "name": "Food 101", "calories": 101});
+      let meal_100 = await Meal.create({ id: 100, name: 'One Hundred' });
+      let mealfood_101 = await MealFood.create({foodId: 101,  mealId: 100})
+
+      meal_100.hasFood(food_01).then(result => {
+        expect(result).toBe(true)
+      })
+
+      return request(app).delete(`/api/v1/meals/99999/foods/${food_01.id}`)
       .then(response => {
         expect(response.status).toBe(404),
-        expect(response.body).toEqual({error: `We can't find a meal with id 12345`})
+        expect(response.body).toEqual({error: "Unknown meal and/or food. Please try again"})
+
+        meal_100.hasFood(food_01).then(result => {
+          expect(result).toBe(true)
+        })
       });
     });
 
-    test('it returns 500 error if meal id missing', async () => {
-      return request(app).get(`/api/v1/meals/:id/foods`)
+    test("it doesn't delete a food from a meal if foodId invalid", async () => {
+      let food_01 = await Food.create({"id": 101, "name": "Food 101", "calories": 101});
+      let meal_100 = await Meal.create({ id: 100, name: 'One Hundred' });
+      let mealfood_101 = await MealFood.create({foodId: 101,  mealId: 100})
+
+      meal_100.hasFood(food_01).then(result => {
+        expect(result).toBe(true)
+      })
+
+      return request(app).delete(`/api/v1/meals/${meal_100.id}/foods/99999`)
       .then(response => {
-        expect(response.status).toBe(500)
+        expect(response.status).toBe(404),
+        expect(response.body).toEqual({error: "Unknown meal and/or food. Please try again"})
+
+        meal_100.hasFood(food_01).then(result => {
+          expect(result).toBe(true)
+        })
+      });
+    });
+
+    test("it doesn't delete a food from a meal if mealfood not found", async () => {
+      let food_01 = await Food.create({"id": 101, "name": "Food 101", "calories": 101});
+      let meal_100 = await Meal.create({ id: 100, name: 'One Hundred' });
+      let mealfood_101 = await MealFood.create({foodId: 101,  mealId: 100})
+
+      meal_100.hasFood(food_01).then(result => {
+        expect(result).toBe(true)
+      })
+
+      return request(app).delete(`/api/v1/meals/${meal_100.id}/foods/wrong`)
+      .then(response => {
+        expect(response.status).toBe(500),
+
+        meal_100.hasFood(food_01).then(result => {
+          expect(result).toBe(true)
+        })
+      });
+    });
+
+    describe('Test GET /api/v1/meals/:id/foods/ path', () => {
+
+      beforeEach(() => {
+        cleanup()
+      });
+      test('it returns a meals associated foods', async () => {
+        let food_1 = await Food.create({
+            "id": 111,
+            "name": "Food 1",
+            "calories": 100
+          });
+
+        let food_2 = await Food.create({
+            "id": 222,
+            "name": "Food 2",
+            "calories": 200
+          });
+
+        let food_3 = await Food.create({
+            "id": 333,
+            "name": "Food 3",
+            "calories": 300
+          });
+
+        let meal_1 = await Meal.create({ id: 111, name: 'Meal 1' });
+        let meal_2 = await Meal.create({ id: 222, name: 'Meal 2' });
+
+        let mealfood_1 =  await MealFood.create({foodId: 111,  mealId: 111})
+        let mealfood_2 =  await MealFood.create({foodId: 222,  mealId: 111})
+        let mealfood_3 =  await MealFood.create({foodId: 222,  mealId: 222})
+        let mealfood_4 =  await MealFood.create({foodId: 333, mealId: 222})
+
+        return request(app).get(`/api/v1/meals/${meal_1.id}/foods`)
+        .then(response => {
+          expect(response.status).toBe(200),
+          expect(response.body).toEqual({"Food": [{"calories": 100, "id": 111, "name": "Food 1"}, {"calories": 200, "id": 222, "name": "Food 2"}], "id": 111, "name": "Meal 1"})
+        });
+      });
+
+      test('it returns 404 error if meal id invalid', async () => {
+        return request(app).get(`/api/v1/meals/12345/foods`)
+        .then(response => {
+          expect(response.status).toBe(404),
+          expect(response.body).toEqual({error: `We can't find a meal with id 12345`})
+        });
+      });
+
+      test('it returns 500 error if meal id missing', async () => {
+        return request(app).get(`/api/v1/meals/:id/foods`)
+        .then(response => {
+          expect(response.status).toBe(500)
+        });
       });
     });
   });
