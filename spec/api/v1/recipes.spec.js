@@ -9,8 +9,8 @@ describe('Edamam Microservice API', () => {
     cleanup()
   });
 
-  test('Test GET /api/v1/food_search path', async () => {
-    return request('https://edamamservice.herokuapp.com').get('/api/v1/food_search?q=banana')
+  test('Test GET /api/v1/recipes/food_search path', async () => {
+    return request('https://edamamservice.herokuapp.com').get('/api/v1/recipes/food_search?q=banana')
     .then(response => {
       expect(response.status).toBe(200);
       expect(response.body.length).toBe(20);
@@ -32,16 +32,16 @@ describe('Edamam Microservice API', () => {
     })
   })
 
-  test('Test bad GET /api/v1/food_search path with no q param', async () => {
-    return request('https://edamamservice.herokuapp.com').get('/api/v1/food_search')
+  test('Test bad GET /api/v1/recipes/food_search path with no q param', async () => {
+    return request('https://edamamservice.herokuapp.com').get('/api/v1/recipes/food_search')
     .then(response => {
       expect(response.status).toBe(400);
       expect(response.body).toEqual({"error": "Include food in query"});
     })
   })
 
-  test('Test GET /api/v1/servings path', async () => {
-    return request('https://edamamservice.herokuapp.com').get('/api/v1/servings?q=2')
+  test('Test GET /api/v1/recipes/servings path', async () => {
+    return request('https://edamamservice.herokuapp.com').get('/api/v1/recipes/servings?q=2')
     .then(response => {
       expect(response.status).toBe(200);
       expect(response.body.length).toBe(4);
@@ -63,24 +63,24 @@ describe('Edamam Microservice API', () => {
     })
   })
 
-  test('Test bad GET /api/v1/servings path with no q param', async () => {
-    return request('https://edamamservice.herokuapp.com').get('/api/v1/servings')
+  test('Test bad GET /api/v1/recipes/servings path with no q param', async () => {
+    return request('https://edamamservice.herokuapp.com').get('/api/v1/recipes/servings')
     .then(response => {
       expect(response.status).toBe(400);
       expect(response.body).toEqual({"error": "Include servings in query"});
     })
   })
 
-  test('Test bad GET /api/v1/servings path no match for that quantity', async () => {
-    return request('https://edamamservice.herokuapp.com').get('/api/v1/servings?q=2000')
+  test('Test bad GET /api/v1/recipes/servings path no match for that quantity', async () => {
+    return request('https://edamamservice.herokuapp.com').get('/api/v1/recipes/servings?q=2000')
     .then(response => {
       expect(response.status).toBe(400);
       expect(response.body).toEqual({"error": "No matches found for that number"});
     })
   })
 
-  test('Test GET /api/v1/weight path', async () => {
-    return request('https://edamamservice.herokuapp.com').get('/api/v1/weight?min=450&max=495')
+  test('Test GET /api/v1/recipes/weight path', async () => {
+    return request('https://edamamservice.herokuapp.com').get('/api/v1/recipes/weight?min=450&max=495')
     .then(response => {
       expect(response.status).toBe(200);
       expect(response.body.length).toBe(7);
@@ -102,32 +102,32 @@ describe('Edamam Microservice API', () => {
     })
   })
 
-  test('Test bad GET /api/v1/weight path with no max or min param', async () => {
-    return request('https://edamamservice.herokuapp.com').get('/api/v1/weight')
+  test('Test bad GET /api/v1/recipes/weight path with no max or min param', async () => {
+    return request('https://edamamservice.herokuapp.com').get('/api/v1/recipes/weight')
     .then(response => {
       expect(response.status).toBe(400);
       expect(response.body).toEqual({"error": "Include max and min weight in query"});
     })
   })
 
-  test('Test bad GET /api/v1/weight path with no min param', async () => {
-    return request('https://edamamservice.herokuapp.com').get('/api/v1/weight?max=500')
+  test('Test bad GET /api/v1/recipes/weight path with no min param', async () => {
+    return request('https://edamamservice.herokuapp.com').get('/api/v1/recipes/weight?max=500')
     .then(response => {
       expect(response.status).toBe(400);
       expect(response.body).toEqual({"error": "Include max and min weight in query"});
     })
   })
 
-  test('Test bad GET /api/v1/weight path with no max param', async () => {
-    return request('https://edamamservice.herokuapp.com').get('/api/v1/weight?min=500')
+  test('Test bad GET /api/v1/recipes/weight path with no max param', async () => {
+    return request('https://edamamservice.herokuapp.com').get('/api/v1/recipes/weight?min=500')
     .then(response => {
       expect(response.status).toBe(400);
       expect(response.body).toEqual({"error": "Include max and min weight in query"});
     })
   })
 
-  test('Test bad GET /api/v1/weight path no match for that quantity', async () => {
-    return request('https://edamamservice.herokuapp.com').get('/api/v1/weight?min=70000&max=70001')
+  test('Test bad GET /api/v1/recipes/weight path no match for that quantity', async () => {
+    return request('https://edamamservice.herokuapp.com').get('/api/v1/recipes/weight?min=70000&max=70001')
     .then(response => {
       expect(response.status).toBe(400);
       expect(response.body).toEqual({"error": "No matches found for that weight range"});
