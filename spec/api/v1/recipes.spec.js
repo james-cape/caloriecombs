@@ -78,4 +78,59 @@ describe('Edamam Microservice API', () => {
       expect(response.body).toEqual({"error": "No matches found for that number"});
     })
   })
+
+  test('Test GET /api/v1/weight path', async () => {
+    return request('https://edamamservice.herokuapp.com').get('/api/v1/weight?min=450&max=495')
+    .then(response => {
+      expect(response.status).toBe(200);
+      expect(response.body.length).toBe(7);
+      return(response.body[0])
+    })
+    .then(recipe => {
+      expect.objectContaining(
+        {
+          id: expect.any(Number),
+          label: expect.any(String),
+          image: expect.any(String),
+          url: expect.any(String),
+          yield: expect.any(Number),
+          calories: expect.any(Number),
+          totalWeight: expect.any(Number),
+          food: expect.any(String)
+        }
+      )
+    })
+  })
+
+  test('Test bad GET /api/v1/weight path with no max or min param', async () => {
+    return request('https://edamamservice.herokuapp.com').get('/api/v1/weight')
+    .then(response => {
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({"error": "Include max and min weight in query"});
+    })
+  })
+
+  test('Test bad GET /api/v1/weight path with no min param', async () => {
+    return request('https://edamamservice.herokuapp.com').get('/api/v1/weight?max=500')
+    .then(response => {
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({"error": "Include max and min weight in query"});
+    })
+  })
+
+  test('Test bad GET /api/v1/weight path with no max param', async () => {
+    return request('https://edamamservice.herokuapp.com').get('/api/v1/weight?min=500')
+    .then(response => {
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({"error": "Include max and min weight in query"});
+    })
+  })
+
+  test('Test bad GET /api/v1/weight path no match for that quantity', async () => {
+    return request('https://edamamservice.herokuapp.com').get('/api/v1/weight?min=70000&max=70001')
+    .then(response => {
+      expect(response.status).toBe(400);
+      expect(response.body).toEqual({"error": "No matches found for that weight range"});
+    })
+  })
 })
