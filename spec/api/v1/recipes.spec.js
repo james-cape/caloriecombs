@@ -41,7 +41,7 @@ describe('Edamam Microservice API', () => {
   })
 
   test('Test GET /api/v1/recipes/servings path', async () => {
-    return request('https://edamamservice.herokuapp.com').get('/api/v1/recipes/servings?q=2')
+    return request('https://edamamservice.herokuapp.com').get('/api/v1/recipes/servings?q=4')
     .then(response => {
       expect(response.status).toBe(200);
       expect(response.body.length).toBe(4);
@@ -80,10 +80,10 @@ describe('Edamam Microservice API', () => {
   })
 
   test('Test GET /api/v1/recipes/weight path', async () => {
-    return request('https://edamamservice.herokuapp.com').get('/api/v1/recipes/weight?min=450&max=495')
+    return request('https://edamamservice.herokuapp.com').get('/api/v1/recipes/weight?min=500&max=900')
     .then(response => {
       expect(response.status).toBe(200);
-      expect(response.body.length).toBe(7);
+      expect(response.body.length).toBe(24);
       return(response.body[0])
     })
     .then(recipe => {
