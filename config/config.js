@@ -23,6 +23,7 @@ module.exports = {
     "database": process.env.DB_NAME_PROD,
     "host": "127.0.0.1",
     "dialect": "postgres",
-    "operatorsAliases": false
+    "operatorsAliases": false,
+    "use_env_variable": "DATABASE_URL"
   }
 }
