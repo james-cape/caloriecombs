@@ -2,6 +2,9 @@
 
 Welcome to Caloriecombs, an API with corresponding microservice created by James Cape and Brian Plantico at the Turing School of Software and Design. Caloriecombs is built using Express (version 4.16.4) for Node.js (version 10.16.2) and also utilizes an ORM (Sequelize version 5.5.0) to interact with a Postgres database. Caloriecombs stores food and meal information which originates from our aptly named 'Edamam microservice' (https://github.com/james-cape/edamame_service) which consumes the third party Edamam API `/recipes` endpoint (https://developer.edamam.com/edamam-docs-recipe-api). The endpoints which you can access are outlined below with examples of successful requests and successful responses, however, if you have any questions about this API, please reach out to us directly.
 
+Production Link:
+https://afternoon-mesa-16147.herokuapp.com
+
 #### James Cape: https://github.com/james-cape
 #### Brian Plantico: https://github.com/bplantico
 
@@ -57,6 +60,7 @@ GET https://afternoon-mesa-16147.herokuapp.com/api/v1/foods
 ```
 Example Response
 ```
+Status: 200 OK
 [
     {
         "id": 1,
@@ -100,6 +104,7 @@ GET https://afternoon-mesa-16147.herokuapp.com/api/v1/foods/[:food_id]
 ```
 Example Response
 ```
+Status: 200 OK
 {
     "id": 1,
     "name": "banana",
@@ -110,135 +115,244 @@ Example Response
 ```
 
 # <a name="update_food"></a>Update Food Request
-`http://the-real-sweater-weather.herokuapp.com/api/v1/munchies?start=[location]&end=[location]&food=[food_type]`
+`https://afternoon-mesa-16147.herokuapp.com/api/v1/foods/[:food_id]`
 
-A POST request to the update food endpoint takes a food id param in 
+A PATCH request to the update food endpoint takes a food_id in the path and an object with a key of food pointing to another object containing keys of name and/or calories and updates the food with that ID to be the new attributes.
 
-## Example Request
+Example Request
 ```
-GET http://the-real-sweater-weather.herokuapp.com/api/v1/munchies?start=boulder,co&end=denver,co&food=indian
+PATCH https://afternoon-mesa-16147.herokuapp.com/api/v1/foods/4
 
 {
-    "city": "Denver",
-    "restaurants": [
+	"food": {
+        "name": "Ham",
+        "calories": 300
+      }
+}
+```
+Example response
+```
+Status: 200 OK
+{
+    "id": 4,
+    "name": "Tree Ham",
+    "calories": 300,
+    "createdAt": "2019-08-29T13:24:24.981Z",
+    "updatedAt": "2019-08-29T13:35:43.274Z"
+}
+```
+
+# <a name="add_food"></a>Add a Food
+`https://afternoon-mesa-16147.herokuapp.com/api/v1/foods/`
+
+A POST request to `/foods` takes a body with an object of a key `"food":` pointing to another object with keys of `"name"` and `"calories"` in the request body. Both the name and calories keys are required to create a new food record.
+
+Example Request
+```
+POST https://afternoon-mesa-16147.herokuapp.com/api/v1/foods/
+
+{
+	"food": {
+        "name": "Bagel",
+        "calories": 200
+      }
+}
+ ```
+Example Response
+```
+Status: 201 Created
+{
+    "id": 4,
+    "name": "Bagel",
+    "calories": 200,
+    "createdAt": "2019-08-29T13:24:24.981Z",
+    "updatedAt": "2019-08-29T13:35:43.274Z"
+}
+```
+
+# <a name="delete_food"></a>Delete a Food
+`https://afternoon-mesa-16147.herokuapp.com/api/v1/foods/4`
+
+A DELETE request to `/foods/:food_id` doesn't take any other params or body. It responds with a `204` status code to indicate no content.
+
+Example Request
+```
+DELETE https://afternoon-mesa-16147.herokuapp.com/api/v1/foods/4
+```
+
+Example response:
+```
+Status code: 204 No content
+```
+
+# <a name="all_meals"></a>All Meals
+`https://afternoon-mesa-16147.herokuapp.com/api/v1/meals`
+
+The meals endpoint receives a GET request to the `/meals` endpoint and responds with an object containing all of the meals and their associated foods.
+
+Example Request
+```
+GET https://afternoon-mesa-16147.herokuapp.com/api/v1/meals
+```
+
+Example response
+```
+Status: 200 OK
+[
+    {
+        "id": 1,
+        "name": "Breakfast",
+        "foods": [
+            {
+                "id": 1,
+                "name": "Banana",
+                "calories": 150
+            },
+            {
+                "id": 6,
+                "name": "Yogurt",
+                "calories": 550
+            },
+            {
+                "id": 12,
+                "name": "Apple",
+                "calories": 220
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "name": "Snack",
+        "foods": [
+            {
+                "id": 1,
+                "name": "Banana",
+                "calories": 150
+            },
+            {
+                "id": 9,
+                "name": "Gum",
+                "calories": 50
+            },
+            {
+                "id": 10,
+                "name": "Cheese",
+                "calories": 400
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "name": "Lunch",
+        "foods": [
+            {
+                "id": 2,
+                "name": "Bagel Bites - Four Cheese",
+                "calories": 650
+            },
+            {
+                "id": 3,
+                "name": "Chicken Burrito",
+                "calories": 800
+            },
+            {
+                "id": 12,
+                "name": "Apple",
+                "calories": 220
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "name": "Dinner",
+        "foods": [
+            {
+                "id": 1,
+                "name": "Banana",
+                "calories": 150
+            },
+            {
+                "id": 2,
+                "name": "Bagel Bites - Four Cheese",
+                "calories": 650
+            },
+            {
+                "id": 3,
+                "name": "Chicken Burrito",
+                "calories": 800
+            }
+        ]
+    }
+]
+```
+
+# <a name="one_meal"></a>One Meal
+`https://afternoon-mesa-16147.herokuapp.com/api/v1/meals/:meal_id`
+
+A GET request to the `/meals/:meal_id` endpoint shows the meal with that id along with its associated foods.
+
+Example Request
+```
+GET https://afternoon-mesa-16147.herokuapp.com/api/v1/meals/3
+```
+
+Example response
+```
+Status: 200 OK
+{
+    "id": 1,
+    "name": "Breakfast",
+    "foods": [
         {
-            "name": "Biju's Little Curry Shop",
-            "address": "1441 26th St"
+            "id": 1,
+            "name": "Banana",
+            "calories": 150
         },
         {
-            "name": "Spice Room | Neighborhood Indian Bistro",
-            "address": "3157 W 38th Ave"
+            "id": 6,
+            "name": "Yogurt",
+            "calories": 550
         },
         {
-            "name": "Mehak India's Aroma",
-            "address": "250 Steele St"
+            "id": 12,
+            "name": "Apple",
+            "calories": 220
         }
     ]
 }
 ```
 
-# <a name="add_food"></a>Add a Food
-`http://the-real-sweater-weather.herokuapp.com/api/v1/gifs?location=denver,co`
+# <a name="add_food_to_meal"></a>Add Food to Meal Request
+`https://afternoon-mesa-16147.herokuapp.com/api/v1/meals/:meal_id/foods/`
 
-A gifs request takes one location parameter and responds with five objects that represent forecasts. Each forecast contains a day timestamp (unix), a summary of the weather for that day, and a gif url based on the location and weather summary for that day.
 
-## Example Request
+A POST request to the `/meals/:meal_id/foods/` endpoint asscoiates a food to the meal with that id.
+
+Example Request
 ```
-GET http://the-real-sweater-weather.herokuapp.com/api/v1/gifs?location=[location]
-
-{
-    "data": {
-        "images": [
-            {
-                "time": "1565071200",
-                "summary": "Foggy in the morning.",
-                "url": "https://media0.giphy.com/media/3o7rbT3ECCXdEGE8fu/giphy.gif?cid=0e5cb8495d49d16575724b6659eb204d&rid=giphy.gif"
-            },
-            {
-                "time": "1565157600",
-                "summary": "Possible drizzle in the evening.",
-                "url": "https://media0.giphy.com/media/RIlEe3erqB5Qch1PXe/giphy.gif?cid=0e5cb8495d49d16575724b6659a00d2f&rid=giphy.gif"
-            },
-            {
-                "time": "1565244000",
-                "summary": "Possible light rain in the evening.",
-                "url": "https://media2.giphy.com/media/12slQrvE9rsu1q/giphy.gif?cid=0e5cb8495d49d16575724b6659d03acc&rid=giphy.gif"
-            },
-            {
-                "time": "1565330400",
-                "summary": "Possible light rain in the evening.",
-                "url": "https://media2.giphy.com/media/12slQrvE9rsu1q/giphy.gif?cid=0e5cb8495d49d16575724b6659d03acc&rid=giphy.gif"
-            },
-            {
-                "time": "1565416800",
-                "summary": "Mostly cloudy throughout the day.",
-                "url": "https://media3.giphy.com/media/YdUdx8jPIKhxe/giphy.gif?cid=0e5cb8495d49d1666a32724e41565116&rid=giphy.gif"
-            }
-        ],
-        "copyright": "2019"
-    }
- ```
-
-# <a name="delete_food"></a>Delete a Food
-`http://the-real-sweater-weather.herokuapp.com/api/v1/users`
-
-The users endpoint receives a post request with three parameters 1) an `email` address, 2) a `password`, and 3) a `password_confirmation`. If the email address has not already been used to create an account and the password and password_confirmations match, then an account is created for the user and the API responds with an API key.
-
-If the email address provided matches an address already in the database and the passwords match the corresponding password, the user receives their API key in response.
-
-If the email address provided matches an address already in the database but the passwords don't match or don't match the user's password, the response is an error message.
-
-## Example Request
+POST https://afternoon-mesa-16147.herokuapp.com/api/v1/meals/3/foods/
 ```
-POST http://the-real-sweater-weather.herokuapp.com/api/v1/users?email=example@email.com&password=examplepassword&password_confirmation=examplepassword
 
-Example response:
+Example response
+```
+Status: 201 Created
 {
-    "api_key": "sb1fnjXyRebyiABZFkpGhw"
+    "message": "Successfully added FOODNAME to MEALNAME"
 }
 ```
 
-# <a name="all_meals"></a>All Meals
-`http://the-real-sweater-weather.herokuapp.com/api/v1/sessions`
+# <a name="delete_food_from_a_meal"></a>Delete Food From a Meal Request
+`https://afternoon-mesa-16147.herokuapp.com/api/v1/meals/:meal_id/foods/1`
 
-The sessions endpoint receives a post request with two parameters 1) an `email` address, 2) a `password`. If the email address provided matches an address already in the database and the passwords match the corresponding password, the user receives their API key in response.
 
-If the email address provided matches an address already in the database but the password doesn't match the user's password, the response is an error message.
+A DELETE request to the `/meals/:meal_id/foods/:food_id` endpoint deletes the asscoiation between the food and meal with the corresponding id's.
 
-## Example Request
+Example Request
 ```
-POST http://the-real-sweater-weather.herokuapp.com/api/v1/sessions?email=example@email.com&password=examplepassword
-
-Example response:
-{
-    "api_key": "sb1fnjXyRebyiABZFkpGhw"
-}
+DELETE https://afternoon-mesa-16147.herokuapp.com/api/v1/meals/3/foods/1
 ```
 
-# <a name="one_meal"></a>One Meal
-`http://the-real-sweater-weather.herokuapp.com/api/v1/road_trip?origin=[location]&destination=[location]&api_key=[api key]`
-
-The roadtrip endpoint receives a `POST` request with three parameters, 1) an `origin` location, 2) a `destination` location, and 3) an `api_key`. If the api key is active, the response is a JSON 1.0 object which includes a summary of the weather at the time of arrival to the destination and includes the temperature and estimated travel time (in seconds).
-
-## Example Request
+Example response
 ```
-POST http://the-real-sweater-weather.herokuapp.com/api/v1/road_trip?origin=denver,co&destination=loveland,co&api_key=FKSir1ILCmVjv_Mu6tI7Uw
-
-Example response:
-{
-    "data": {
-        "id": "1565123879_7",
-        "type": "road_trip",
-        "attributes": {
-            "summary": "Partly Cloudy",
-            "temperature": 93.14,
-            "est_travel_time": 3566
-        }
-    }
-}
+Status: 204 No content.
 ```
-
-
-
-Heroku link:
-https://afternoon-mesa-16147.herokuapp.com
